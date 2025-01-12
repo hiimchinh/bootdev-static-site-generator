@@ -7,7 +7,7 @@ class TestHtmlNode(unittest.TestCase):
             'href': 'https://example.com',
             'target': '_blank'
         })
-        self.assertEqual(node.props_to_html(), 'href="https://example.com" target="_blank" ')
+        self.assertEqual(node.props_to_html(), ' href="https://example.com" target="_blank"')
 
     def test_eq(self):
         node = HTMLNode('p', 'This is a p tag')
