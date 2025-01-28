@@ -21,3 +21,24 @@ class TestParentNode(unittest.TestCase):
             ]
         )
         self.assertEqual(node.to_html(), '<td><p>This is a test</p></td>')
+
+    def test_parent_inside_parent(self):
+        child = ParentNode(
+            'th',
+            [
+                LeafNode('p', 'row 1'),
+                LeafNode('p', 'row 2')
+            ]
+        )
+        parent = ParentNode(
+            'td',
+            [child]
+        )
+        self.assertEqual(parent.to_html(), '<td><th><p>row 1</p><p>row 2</p></th></td>')
+
+    def test_empty_children(self):
+        node = ParentNode(
+            'table',
+            []
+        )
+        self.assertRaises(ValueError)
