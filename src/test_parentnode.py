@@ -1,7 +1,7 @@
 import unittest
-from parentnode import ParentNode
-from textnode import TextNode, TextType
-from leafnode import LeafNode
+from parentnode import *
+from leafnode import *
+from textnode import *
 
 class TestParentNode(unittest.TestCase):
     def test_empty_tag_parent(self):
