@@ -58,7 +58,7 @@ class TestTextNode(unittest.TestCase):
     def test_img_tag(self):
         src = 'https://www.gardensillustrated.com/plants/pink-flowers'
         alt = 'Flower'
-        img_node = LeafNode('img', None, {'src': src, 'alt': alt})
+        img_node = LeafNode('img', '', {'src': src, 'alt': alt})
         text_node = TextNode(alt, TextType.IMAGE, src)
         self.assertEqual(img_node.to_html(), text_node_to_html_node(text_node).to_html())
         
