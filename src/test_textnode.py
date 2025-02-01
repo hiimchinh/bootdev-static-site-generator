@@ -17,22 +17,22 @@ class TestTextNode(unittest.TestCase):
         self.assertEqual(node, node2)
 
     def test_not_eq(self):
-        node = TextNode('This is a text node', TextType.NORMAL)
+        node = TextNode('This is a text node', TextType.TEXT)
         node2 = TextNode('This is a text node', TextType.BOLD)
         self.assertNotEqual(node, node2)
 
     def test_not_eq2(self):
-        node = TextNode('This is a text node', TextType.NORMAL)
-        node2 = TextNode('This is a different text node', TextType.NORMAL)
+        node = TextNode('This is a text node', TextType.TEXT)
+        node2 = TextNode('This is a different text node', TextType.TEXT)
         self.assertNotEqual(node, node2)
 
     def test_empty_url(self):
-        node = TextNode('This is a text node with no url', TextType.NORMAL)
+        node = TextNode('This is a text node with no url', TextType.TEXT)
         self.assertIsNone(node.url)
 
     def test_normal_text_type_to_html(self):
         text = 'This is a normal text'
-        node = TextNode(text, TextType.NORMAL)
+        node = TextNode(text, TextType.TEXT)
         htmlNode = LeafNode(None, text)
         self.assertEqual(htmlNode.to_html(), text_node_to_html_node(node).to_html())
 
