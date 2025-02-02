@@ -102,3 +102,37 @@ class TestUtils(unittest.TestCase):
             ],
             extract_list
         )
+
+    def test_extract_images_matches_none(self):
+        text = 'This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif'
+        extract_list = extract_markdown_images(text)
+        self.assertEqual([], extract_list)
+
+    def test_split_nodes_image_found_none(self):
+        node = TextNode('This is a node with ![rick roll] but no link to image', TextType.TEXT)
+        extracted_list = split_nodes_image([node])
+        self.assertEqual([node], extracted_list)
+
+    def test_split_nodes_image_found_one(self):
+        node = TextNode('This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif)', TextType.TEXT)
+        extracted_list = split_nodes_image([node])
+        self.assertListEqual(
+            [
+                TextNode('This is text with a ', TextType.TEXT),
+                TextNode('rick roll', TextType.IMAGE, 'https://i.imgur.com/aKaOqIh.gif')
+            ],
+            extracted_list
+        )
+
+    def test_split_nodes_image_found_two_in_one_node(self):
+        node = TextNode('This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)', TextType.TEXT)
+        extract_list = split_nodes_image([node])
+        self.assertListEqual(
+            [
+                TextNode('This is text with a ', TextType.TEXT),
+                TextNode('rick roll', TextType.IMAGE, 'https://i.imgur.com/aKaOqIh.gif'),
+                TextNode(' and ', TextType.TEXT),
+                TextNode('obi wan', TextType.IMAGE, 'https://i.imgur.com/fJRm4Vk.jpeg'),
+            ],
+            extract_list
+        )
