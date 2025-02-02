@@ -40,12 +40,15 @@ def split_nodes_delimeter(old_nodes, delimeter, text_type):
     return new_nodes
 
 def split_nodes_image(old_nodes):
+    return split_nodes(old_nodes, extract_markdown_images)
+
+def split_nodes(old_nodes, extract_func):
     new_nodes = []
     for node in old_nodes:
         if node.text_type != TextType.TEXT:
             new_nodes.append(node)
             continue
-        matches = extract_markdown_images(node.text)
+        matches = extract_func(node.text)
         if len(matches) == 0:
             return old_nodes
         original_text = node.text
@@ -56,6 +59,10 @@ def split_nodes_image(old_nodes):
             original_text = sections[1]
             new_nodes.append(TextNode(match[0], TextType.IMAGE, match[1]))
     return new_nodes
+
+def split_nodes_link(old_nodes):
+    return split_nodes(old_nodes, extract_markdown_links)
+
 
 def extract_markdown_images(text):
     matches = re.findall(r"!\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
