@@ -136,3 +136,21 @@ class TestUtils(unittest.TestCase):
             ],
             extract_list
         )
+
+    def test_split_nodes_link_found_none(self):
+        node = TextNode('This is text with a link [to boot dev](https://www.boot.dev', TextType.TEXT)
+        extract_list = split_nodes_link([node])
+        self.assertListEqual([node], extract_list)
+
+    def test_split_nodes_link_found_one(self):
+        node = TextNode('This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)', TextType.TEXT)
+        extract_list = split_nodes_link([node])
+        self.assertListEqual(
+            [
+                TextNode('This is text with a link ', TextType.TEXT),
+                TextNode('to boot dev', TextType.LINK, 'https://www.boot.dev'),
+                TextNode(' and ', TextType.TEXT),
+                TextNode('to youtube', TextType.LINK, 'https://www.youtube.com/@bootdotdev')
+            ],
+            extract_list
+        )

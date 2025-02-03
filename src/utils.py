@@ -39,10 +39,9 @@ def split_nodes_delimeter(old_nodes, delimeter, text_type):
         
     return new_nodes
 
-def split_nodes_image(old_nodes):
-    return split_nodes(old_nodes, extract_markdown_images)
 
-def split_nodes(old_nodes, extract_func):
+
+def split_nodes(old_nodes, extract_func, text_type, split_func):
     new_nodes = []
     for node in old_nodes:
         if node.text_type != TextType.TEXT:
@@ -53,16 +52,25 @@ def split_nodes(old_nodes, extract_func):
             return old_nodes
         original_text = node.text
         for match in matches:
-            sections = original_text.split(f'![{match[0]}]({match[1]})', 1)
+            sections = split_func(original_text, match)
             if sections[0] != '':
                 new_nodes.append(TextNode(sections[0], TextType.TEXT))
-            original_text = sections[1]
-            new_nodes.append(TextNode(match[0], TextType.IMAGE, match[1]))
+            if len(sections) == 2:
+                original_text = sections[1]
+            new_nodes.append(TextNode(match[0], text_type, match[1]))
     return new_nodes
 
-def split_nodes_link(old_nodes):
-    return split_nodes(old_nodes, extract_markdown_links)
+def split_nodes_image(old_nodes):
+    return split_nodes(old_nodes, extract_markdown_images, TextType.IMAGE, split_markdown_image)
 
+def split_nodes_link(old_nodes):
+    return split_nodes(old_nodes, extract_markdown_links, TextType.LINK, split_markdown_link)
+
+def split_markdown_image(text, match):
+    return text.split(f'![{match[0]}]({match[1]})', 1)
+
+def split_markdown_link(text, match):
+    return text.split(f'[{match[0]}]({match[1]})', 1)
 
 def extract_markdown_images(text):
     matches = re.findall(r"!\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
