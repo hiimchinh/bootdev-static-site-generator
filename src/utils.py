@@ -49,7 +49,8 @@ def split_nodes(old_nodes, extract_func, text_type, split_func):
             continue
         matches = extract_func(node.text)
         if len(matches) == 0:
-            return old_nodes
+            new_nodes.append(node)
+            continue
         original_text = node.text
         for match in matches:
             sections = split_func(original_text, match)
@@ -58,6 +59,9 @@ def split_nodes(old_nodes, extract_func, text_type, split_func):
             if len(sections) == 2:
                 original_text = sections[1]
             new_nodes.append(TextNode(match[0], text_type, match[1]))
+        # if there's still left over text, append new text node to new nodes
+        if original_text:
+            new_nodes.append(TextNode(original_text, TextType.TEXT))
     return new_nodes
 
 def split_nodes_image(old_nodes):
@@ -79,3 +83,12 @@ def extract_markdown_images(text):
 def extract_markdown_links(text):
     matches = re.findall(r"\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
     return matches
+
+def text_to_textnodes(text):
+    node = TextNode(text, TextType.TEXT)
+    extracted_bold = split_nodes_delimeter([node], '**', TextType.BOLD)
+    extracted_italic = split_nodes_delimeter(extracted_bold, '*', TextType.ITALIC)
+    extracted_code = split_nodes_delimeter(extracted_italic, '`', TextType.CODE)
+    extracted_image = split_nodes_image(extracted_code)
+    extracted_link = split_nodes_link(extracted_image)
+    return extracted_link

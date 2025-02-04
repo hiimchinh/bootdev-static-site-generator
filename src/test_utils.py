@@ -137,6 +137,33 @@ class TestUtils(unittest.TestCase):
             extract_list
         )
 
+    def test_split_nodes_images_from_extracted_list(self):
+        extracted_list = [
+            TextNode("This is ", TextType.TEXT),
+            TextNode("text", TextType.BOLD),
+            TextNode(" with an ", TextType.TEXT),
+            TextNode("italic", TextType.ITALIC),
+            TextNode(" word and a ", TextType.TEXT),
+            TextNode("code block", TextType.CODE),
+            TextNode(" and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)", TextType.TEXT),
+        ]
+        filtered_image = split_nodes_image(extracted_list)
+        self.assertListEqual(
+            [
+                TextNode("This is ", TextType.TEXT),
+                TextNode("text", TextType.BOLD),
+                TextNode(" with an ", TextType.TEXT),
+                TextNode("italic", TextType.ITALIC),
+                TextNode(" word and a ", TextType.TEXT),
+                TextNode("code block", TextType.CODE),
+                TextNode(" and an ", TextType.TEXT),
+                TextNode("obi wan image", TextType.IMAGE, "https://i.imgur.com/fJRm4Vk.jpeg"),
+                TextNode(" and a [link](https://boot.dev)", TextType.TEXT),
+            ],
+            filtered_image
+        )
+
+
     def test_split_nodes_link_found_none(self):
         node = TextNode('This is text with a link [to boot dev](https://www.boot.dev', TextType.TEXT)
         extract_list = split_nodes_link([node])
@@ -153,4 +180,25 @@ class TestUtils(unittest.TestCase):
                 TextNode('to youtube', TextType.LINK, 'https://www.youtube.com/@bootdotdev')
             ],
             extract_list
+        )
+
+    
+
+    def test_text_to_textnodes(self):
+        text = 'This is **text** with an *italic* word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)'
+        extracted_list = text_to_textnodes(text)
+        self.assertListEqual(
+            [
+                TextNode("This is ", TextType.TEXT),
+                TextNode("text", TextType.BOLD),
+                TextNode(" with an ", TextType.TEXT),
+                TextNode("italic", TextType.ITALIC),
+                TextNode(" word and a ", TextType.TEXT),
+                TextNode("code block", TextType.CODE),
+                TextNode(" and an ", TextType.TEXT),
+                TextNode("obi wan image", TextType.IMAGE, "https://i.imgur.com/fJRm4Vk.jpeg"),
+                TextNode(" and a ", TextType.TEXT),
+                TextNode("link", TextType.LINK, "https://boot.dev"),
+            ],
+            extracted_list
         )
