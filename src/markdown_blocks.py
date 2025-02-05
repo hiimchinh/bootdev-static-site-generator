@@ -18,4 +18,8 @@ def block_to_block_type(block):
     if len(match_headings) > 0:
         return 'heading'
 
+    if block.startswith('```') and block.endswith('```'):
+        return 'code'
+    
+    
     return 'normal'

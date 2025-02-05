@@ -54,3 +54,15 @@ This is a paragraph of text. It has some **bold** and *italic* words inside of i
         text = '''### This is a heading
 and this extra line'''
         self.assertEqual(block_to_block_type(text), 'normal')
+
+    def test_code_block_is_correct(self):
+        test_cases = [
+            '```var name = "Chinh HM"```',
+            """```const iframe = document.getElementById("iframe")
+
+console.log('iframe is', iframe)```"""
+
+        ]
+        for case in test_cases:
+            self.assertEqual(block_to_block_type(case), 'code')
+        
