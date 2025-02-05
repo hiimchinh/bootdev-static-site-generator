@@ -1,3 +1,5 @@
+import re
+
 def markdown_to_blocks(markdown):
     blocks = markdown.split('\n\n')
     blocks = list(
@@ -10,3 +12,10 @@ def markdown_to_blocks(markdown):
         )
     )
     return blocks
+
+def block_to_block_type(block):
+    match_headings = re.findall(r"^#{1,6} [^\n]+$", block)
+    if len(match_headings) > 0:
+        return 'heading'
+
+    return 'normal'

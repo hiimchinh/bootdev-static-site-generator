@@ -33,3 +33,24 @@ This is a paragraph of text. It has some **bold** and *italic* words inside of i
             ],
             blocks
         )
+
+    
+    def test_heading_block_success(self):
+        text = '###### This is a heading'
+        block_type = block_to_block_type(text)
+        self.assertEqual(block_type, 'heading')
+
+    def test_heading_block_wrong_syntax(self):
+        text = '###this try to be heading'
+        block_type = block_to_block_type(text)
+        self.assertEqual(block_type, 'normal')
+
+    def test_heading_block_with_new_line_is_normal(self):
+        text = '# this try to have new line stuff \n okay'
+        block_type = block_to_block_type(text)
+        self.assertEqual(block_type, 'normal')
+
+    def test_heading_block_extra_line(self):
+        text = '''### This is a heading
+and this extra line'''
+        self.assertEqual(block_to_block_type(text), 'normal')
