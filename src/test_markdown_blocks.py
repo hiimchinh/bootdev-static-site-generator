@@ -74,3 +74,56 @@ console.log('iframe is', iframe)```"""
         ]
         for case in test_cases:
             self.assertEqual(block_to_block_type(case), 'quote')
+
+    def test_incorrect_quote_block(self):
+        fail_cases = [
+            """> This is first line
+            the second line does not start with >""",
+            """ > Missing one first line
+> second is correct
+>third is also correct"""
+        ]
+        for case in fail_cases:
+            self.assertEqual(block_to_block_type(case), 'normal')
+
+    def test_correct_unordered_list(self):
+        correct_cases = [
+            """* First to do list
+* Second todo, go to the mall or something
+* Third one, you should also check this""",
+"""- item 1
+- item 2
+- item 3"""
+        ]
+        for case in correct_cases:
+            self.assertEqual(block_to_block_type(case), 'unordered_list')
+
+    def test_incorrect_unordered_list(self):
+        incorrect_cases  = [
+            """* First line correct
+*Second line missing space
+* Third line is correct"""
+        ]
+        for case in incorrect_cases:
+            self.assertEqual(block_to_block_type(case), 'normal')
+
+    def test_correct_ordered_list(self):
+        correct_cases = [
+            """1. First item
+2. Second item on the list
+3. here's another one"""
+        ]
+        for case in correct_cases:
+            self.assertEqual(block_to_block_type(case), 'ordered_list')
+
+    def test_incorrect_ordered_list(self):
+        incorrect_cases = [
+            """1. First item is correct
+2.Second one is missing a space
+3. Third one is correct""",
+            """1 item 1 missing colon
+2. item two correct
+3. there is also correct"""
+        ]
+        for case in incorrect_cases:
+            self.assertEqual(block_to_block_type(case), 'normal')
