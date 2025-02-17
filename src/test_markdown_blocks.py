@@ -66,3 +66,11 @@ console.log('iframe is', iframe)```"""
         for case in test_cases:
             self.assertEqual(block_to_block_type(case), 'code')
         
+
+    def test_quote_block_correct(self):
+        test_cases = [
+            """>This is a quote
+> and another quote"""
+        ]
+        for case in test_cases:
+            self.assertEqual(block_to_block_type(case), 'quote')
